@@ -1,12 +1,12 @@
 library image_selector_formfield;
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'dart:io';
 import 'dart:async';
+import 'dart:io';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-export 'package:image_cropper/src/options.dart';
 
 class ImageSelectorFormField extends StatefulWidget {
   ImageSelectorFormField(
@@ -130,8 +130,7 @@ class _ImageSelectorFormFieldState extends State<ImageSelectorFormField> {
                           icon: widget.icon ??
                               Icon(
                                 Icons.add_a_photo,
-                                size: widget.boxConstraints.biggest.width >
-                                        widget.boxConstraints.biggest.height
+                                size: widget.boxConstraints.biggest.width > widget.boxConstraints.biggest.height
                                     ? widget.boxConstraints.biggest.height / 2.5
                                     : widget.boxConstraints.biggest.width / 2.5,
                                 color: Colors.black45,
@@ -139,12 +138,7 @@ class _ImageSelectorFormFieldState extends State<ImageSelectorFormField> {
                         )),
                   ),
                 )),
-            state.hasError
-                ? Container(
-                    padding: EdgeInsets.only(top: 5),
-                    child: Text(state.errorText!,
-                        style: this.widget.errorTextStyle))
-                : Container()
+            state.hasError ? Container(padding: EdgeInsets.only(top: 5), child: Text(state.errorText!, style: this.widget.errorTextStyle)) : Container()
           ],
         );
       } else {
@@ -182,12 +176,7 @@ class _ImageSelectorFormFieldState extends State<ImageSelectorFormField> {
                     )),
               ),
             ),
-            state.hasError
-                ? Container(
-                    padding: EdgeInsets.only(top: 5),
-                    child: Text(state.errorText!,
-                        style: this.widget.errorTextStyle))
-                : Container()
+            state.hasError ? Container(padding: EdgeInsets.only(top: 5), child: Text(state.errorText!, style: this.widget.errorTextStyle)) : Container()
           ],
         );
       }
@@ -250,12 +239,11 @@ class __InkWidgetState extends State<_InkWidget> {
     final _picker = ImagePicker();
     final pickedFile = await (_picker.getImage(source: ImageSource.gallery));
     File image = File(pickedFile!.path);
-    File? croppedFile = await ImageCropper.cropImage(
+    CroppedFile? croppedFile = await ImageCropper.platform.cropImage(
       aspectRatio: widget.cropStyle == CropStyle.circle
           ? CropAspectRatio(ratioX: 1.0, ratioY: 1.0)
           : widget.cropRatioX != null && widget.cropRatioY != null
-              ? CropAspectRatio(
-                  ratioX: widget.cropRatioX!, ratioY: widget.cropRatioY!)
+              ? CropAspectRatio(ratioX: widget.cropRatioX!, ratioY: widget.cropRatioY!)
               : null,
       sourcePath: image.path,
       maxWidth: widget.cropMaxWidth,
@@ -264,10 +252,8 @@ class __InkWidgetState extends State<_InkWidget> {
       compressQuality: widget.compressQuality!,
       compressFormat: widget.compressFormat!,
       aspectRatioPresets: widget.aspectRatioPresets!,
-      androidUiSettings: widget.androidUiSettings,
-      iosUiSettings: widget.iosUiSettings,
     );
-    return croppedFile;
+    return File(croppedFile!.path);
   }
 
   @override
